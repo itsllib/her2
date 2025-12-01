@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surprise with Sound!</title>
+    <title>Happy Birthday Shirley!</title>
     <style>
         body {
             margin: 0;
@@ -11,9 +11,32 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #fff0f3;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fff0f3; /* Soft pink background */
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', sans-serif; /* Cute font */
             overflow: hidden;
+        }
+
+        /* The Birthday Message Styling */
+        #birthday-message {
+            position: absolute;
+            top: 15%; /* Positioned near the top */
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 3.5rem;
+            color: #ff6b6b; /* Salmon/Coral color */
+            text-shadow: 2px 2px 0px #fff, 4px 4px 0px rgba(0,0,0,0.1);
+            opacity: 0; /* Hidden initially */
+            transform: scale(0.5);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
+            z-index: 50; /* On top of everything */
+            pointer-events: none;
+        }
+
+        /* Class to show the message */
+        #birthday-message.show-message {
+            opacity: 1;
+            transform: scale(1);
         }
 
         .container {
@@ -64,6 +87,8 @@
 </head>
 <body>
 
+    <div id="birthday-message">Happy Birthday Shirley!</div>
+
     <div class="container" id="main-container" onclick="openBox()">
         <div id="box-wrapper">
             <img src="box.png" alt="Closed Box" id="box-image">
@@ -85,21 +110,25 @@
             const boxWrapper = document.getElementById('box-wrapper');
             const bearImage = document.getElementById('bear-image');
             const container = document.getElementById('main-container');
+            const message = document.getElementById('birthday-message');
 
-            // 1. Play the Sound
-            // We create a new audio object and tell it to play immediately
+            // 1. Play Sound
             const audio = new Audio('horn.mp3');
-            audio.volume = 0.5; // Set volume (0.0 to 1.0)
+            audio.volume = 0.5;
             audio.play();
 
-            // 2. Visual Changes
+            // 2. Hide Box / Show Bear
             boxWrapper.style.display = 'none';
             bearImage.classList.add('pop-out-anim');
+            
+            // 3. Show the Birthday Message
+            message.classList.add('show-message');
 
+            // 4. Disable future clicks
             container.style.cursor = 'default';
             container.classList.add('opened');
 
-            // 3. Fire Confetti
+            // 5. Fire Confetti
             fireCartoonConfetti();
         }
 
