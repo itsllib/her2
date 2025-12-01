@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surprise Explosion!</title>
+    <title>Cartoon Surprise!</title>
     <style>
         body {
             margin: 0;
@@ -20,11 +20,9 @@
             position: relative;
             text-align: center;
             cursor: pointer;
-            /* Ensure container doesn't block confetti layer */
             z-index: 10; 
         }
 
-        /* Styling for the initial closed box image */
         #box-image {
             max-width: 300px;
             width: 100%;
@@ -33,7 +31,7 @@
         }
 
         #box-wrapper:hover #box-image {
-            transform: scale(1.05) rotate(3deg); /* Little wiggle on hover */
+            transform: scale(1.05) rotate(3deg);
         }
 
         .instruction {
@@ -43,34 +41,22 @@
             font-weight: bold;
         }
 
-        /* Styling for the bear image, hidden initially */
         #bear-image {
-            display: none; /* Hidden by default */
+            display: none;
             max-width: 300px;
             width: 100%;
             filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
         }
 
-        /* The Pop Animation Class */
         .pop-out-anim {
             display: block !important;
             animation: popUp 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
         }
 
-        /* Keyframes for the springy pop-up effect */
         @keyframes popUp {
-            0% {
-                transform: scale(0) translateY(50px);
-                opacity: 0;
-            }
-            80% {
-                transform: scale(1.1) translateY(-10px);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1) translateY(0);
-                opacity: 1;
-            }
+            0% { transform: scale(0) translateY(50px); opacity: 0; }
+            80% { transform: scale(1.1) translateY(-10px); opacity: 1; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
         }
     </style>
 </head>
@@ -89,34 +75,43 @@
 
     <script>
         function openBox() {
-            // Get references to the elements
             const boxWrapper = document.getElementById('box-wrapper');
             const bearImage = document.getElementById('bear-image');
 
-            // Check if already opened to prevent double clicks
             if (bearImage.style.display === 'block') return;
 
-            // 1. Hide the initial box and instruction
             boxWrapper.style.display = 'none';
-
-            // 2. Show the bear image by adding the animation class
             bearImage.classList.add('pop-out-anim');
 
-            // 3. Trigger the confetti explosion
-            fireConfetti();
+            fireCartoonConfetti();
         }
 
-        function fireConfetti() {
-            // This calls the library loaded above.
-            // We configure it for a central explosion "burst".
+        function fireCartoonConfetti() {
+            // Cartoony defaults
+            const defaults = {
+                origin: { y: 0.6 },
+                zIndex: 100,
+                // These colors are pastel/cartoony
+                colors: ['#FF9AA2', '#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA']
+            };
+
+            // Burst 1: Big Circles (The main "Cartoon" look)
             confetti({
-                particleCount: 150, // Number of papers
-                spread: 180,        // How wide the explosion is in degrees
-                origin: { y: 0.6 }, // Start slightly below center to align with the box top
-                startVelocity: 40,  // How fast they explode outwards
-                gravity: 1,         // How fast they fall down
-                colors: ['#FF6B6B', '#FFD93D', '#6BCB77', '#4D96FF', '#F7F7F7'], // Festive colors
-                zIndex: 100         // Ensure it appears on top of the bear
+                ...defaults,
+                particleCount: 50,
+                spread: 100,
+                scalar: 2,         // Makes them 2x bigger (Chunky!)
+                shapes: ['circle'] // Circles look softer/cartoonier
+            });
+
+            // Burst 2: Smaller circles for filler
+            confetti({
+                ...defaults,
+                particleCount: 30,
+                spread: 120,
+                scalar: 1,
+                shapes: ['circle'],
+                startVelocity: 45
             });
         }
     </script>
