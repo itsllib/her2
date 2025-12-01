@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One Time Surprise</title>
+    <title>Surprise with Sound!</title>
     <style>
         body {
             margin: 0;
@@ -19,7 +19,7 @@
         .container {
             position: relative;
             text-align: center;
-            cursor: pointer; /* Looks clickable initially */
+            cursor: pointer;
             z-index: 10; 
         }
 
@@ -67,7 +67,7 @@
     <div class="container" id="main-container" onclick="openBox()">
         <div id="box-wrapper">
             <img src="box.png" alt="Closed Box" id="box-image">
-            <div class="instruction" id="instruction-text">Click the box!</div>
+            <div class="instruction">Click the box!</div>
         </div>
 
         <img src="bear.png" alt="Cute Bear Surprise" id="bear-image">
@@ -76,29 +76,30 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script>
-        // A variable to track if the box is already open
         let isOpened = false;
 
         function openBox() {
-            // 1. CHECK: If already opened, stop right here. Do nothing.
             if (isOpened) return;
-
-            // 2. Set the flag to true so this code never runs again
             isOpened = true;
 
             const boxWrapper = document.getElementById('box-wrapper');
             const bearImage = document.getElementById('bear-image');
             const container = document.getElementById('main-container');
 
-            // Hide box, show bear
+            // 1. Play the Sound
+            // We create a new audio object and tell it to play immediately
+            const audio = new Audio('horn.mp3');
+            audio.volume = 0.5; // Set volume (0.0 to 1.0)
+            audio.play();
+
+            // 2. Visual Changes
             boxWrapper.style.display = 'none';
             bearImage.classList.add('pop-out-anim');
 
-            // Change cursor to default so it doesn't look clickable anymore
             container.style.cursor = 'default';
             container.classList.add('opened');
 
-            // Fire the confetti
+            // 3. Fire Confetti
             fireCartoonConfetti();
         }
 
