@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surprise!</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff0f3; /* Soft pink background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        /* The Closed Box Emoji Styling */
+        #box-wrapper {
+            transition: transform 0.2s ease;
+        }
+
+        #box-wrapper:hover {
+            transform: scale(1.05) rotate(3deg); /* Little wiggle on hover */
+        }
+
+        .box-emoji {
+            font-size: 150px;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
+            user-select: none;
+        }
+
+        .instruction {
+            margin-top: 10px;
+            color: #8e6e6e;
+            font-size: 1.2rem;
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
+
+        /* The Bear Image Styling */
+        #bear-image {
+            display: none; /* Hidden by default */
+            max-width: 300px;
+            width: 100%;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+        }
+
+        /* The Pop Animation */
+        .pop-out-anim {
+            display: block !important;
+            animation: popUp 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        @keyframes popUp {
+            0% {
+                transform: scale(0) translateY(50px);
+                opacity: 0;
+            }
+            80% {
+                transform: scale(1.1) translateY(-10px);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" onclick="openBox()">
+        <div id="box-wrapper">
+            <div class="box-emoji">📦</div>
+            <div class="instruction">Click the box!</div>
+        </div>
+
+        <img src="bear.png" alt="Cute Bear" id="bear-image">
+    </div>
+
+    <script>
+        function openBox() {
+            const boxWrapper = document.getElementById('box-wrapper');
+            const bearImage = document.getElementById('bear-image');
+
+            // 1. Hide the box
+            boxWrapper.style.display = 'none';
+
+            // 2. Show the bear with the animation class
+            bearImage.classList.add('pop-out-anim');
+            
+            // Optional: Play a cute sound here if you wanted!
+        }
+    </script>
+
+</body>
+</html>
