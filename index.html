@@ -22,30 +22,26 @@
             cursor: pointer;
         }
 
-        /* The Closed Box Emoji Styling */
-        #box-wrapper {
+        /* Styling for the initial closed box image */
+        #box-image {
+            max-width: 300px;
+            width: 100%;
             transition: transform 0.2s ease;
-        }
-
-        #box-wrapper:hover {
-            transform: scale(1.05) rotate(3deg); /* Little wiggle on hover */
-        }
-
-        .box-emoji {
-            font-size: 150px;
             filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
-            user-select: none;
+        }
+
+        #box-wrapper:hover #box-image {
+            transform: scale(1.05) rotate(3deg); /* Little wiggle on hover */
         }
 
         .instruction {
             margin-top: 10px;
             color: #8e6e6e;
-            font-size: 1.2rem;
-            opacity: 1;
-            transition: opacity 0.5s;
+            font-size: 1.5rem;
+            font-weight: bold;
         }
 
-        /* The Bear Image Styling */
+        /* Styling for the bear image, hidden initially */
         #bear-image {
             display: none; /* Hidden by default */
             max-width: 300px;
@@ -53,12 +49,13 @@
             filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
         }
 
-        /* The Pop Animation */
+        /* The Pop Animation Class */
         .pop-out-anim {
             display: block !important;
             animation: popUp 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
         }
 
+        /* Keyframes for the springy pop-up effect */
         @keyframes popUp {
             0% {
                 transform: scale(0) translateY(50px);
@@ -73,36 +70,30 @@
                 opacity: 1;
             }
         }
-
-        .fade-out {
-            opacity: 0;
-            pointer-events: none;
-        }
     </style>
 </head>
 <body>
 
     <div class="container" onclick="openBox()">
         <div id="box-wrapper">
-            <div class="box-emoji">📦</div>
+            <img src="box.png" alt="Closed Box" id="box-image">
             <div class="instruction">Click the box!</div>
         </div>
 
-        <img src="bear.png" alt="Cute Bear" id="bear-image">
+        <img src="bear.png" alt="Cute Bear Surprise" id="bear-image">
     </div>
 
     <script>
         function openBox() {
+            // Get references to the elements
             const boxWrapper = document.getElementById('box-wrapper');
             const bearImage = document.getElementById('bear-image');
 
-            // 1. Hide the box
+            // 1. Hide the initial box and instruction
             boxWrapper.style.display = 'none';
 
-            // 2. Show the bear with the animation class
+            // 2. Show the bear image by adding the animation class
             bearImage.classList.add('pop-out-anim');
-            
-            // Optional: Play a cute sound here if you wanted!
         }
     </script>
 
