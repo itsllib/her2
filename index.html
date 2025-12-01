@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cartoon Surprise!</title>
+    <title>One Time Surprise</title>
     <style>
         body {
             margin: 0;
@@ -11,7 +11,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #fff0f3; /* Soft pink background */
+            background-color: #fff0f3;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
         }
@@ -19,7 +19,7 @@
         .container {
             position: relative;
             text-align: center;
-            cursor: pointer;
+            cursor: pointer; /* Looks clickable initially */
             z-index: 10; 
         }
 
@@ -30,7 +30,8 @@
             filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
         }
 
-        #box-wrapper:hover #box-image {
+        /* Only wiggle the box if it hasn't been opened yet */
+        .container:not(.opened):hover #box-image {
             transform: scale(1.05) rotate(3deg);
         }
 
@@ -39,6 +40,7 @@
             color: #8e6e6e;
             font-size: 1.5rem;
             font-weight: bold;
+            transition: opacity 0.3s;
         }
 
         #bear-image {
@@ -62,10 +64,10 @@
 </head>
 <body>
 
-    <div class="container" onclick="openBox()">
+    <div class="container" id="main-container" onclick="openBox()">
         <div id="box-wrapper">
             <img src="box.png" alt="Closed Box" id="box-image">
-            <div class="instruction">Click the box!</div>
+            <div class="instruction" id="instruction-text">Click the box!</div>
         </div>
 
         <img src="bear.png" alt="Cute Bear Surprise" id="bear-image">
@@ -74,37 +76,47 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script>
+        // A variable to track if the box is already open
+        let isOpened = false;
+
         function openBox() {
+            // 1. CHECK: If already opened, stop right here. Do nothing.
+            if (isOpened) return;
+
+            // 2. Set the flag to true so this code never runs again
+            isOpened = true;
+
             const boxWrapper = document.getElementById('box-wrapper');
             const bearImage = document.getElementById('bear-image');
+            const container = document.getElementById('main-container');
 
-            if (bearImage.style.display === 'block') return;
-
+            // Hide box, show bear
             boxWrapper.style.display = 'none';
             bearImage.classList.add('pop-out-anim');
 
+            // Change cursor to default so it doesn't look clickable anymore
+            container.style.cursor = 'default';
+            container.classList.add('opened');
+
+            // Fire the confetti
             fireCartoonConfetti();
         }
 
         function fireCartoonConfetti() {
-            // Cartoony defaults
             const defaults = {
                 origin: { y: 0.6 },
                 zIndex: 100,
-                // These colors are pastel/cartoony
                 colors: ['#FF9AA2', '#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA']
             };
 
-            // Burst 1: Big Circles (The main "Cartoon" look)
             confetti({
                 ...defaults,
                 particleCount: 50,
                 spread: 100,
-                scalar: 2,         // Makes them 2x bigger (Chunky!)
-                shapes: ['circle'] // Circles look softer/cartoonier
+                scalar: 2,
+                shapes: ['circle']
             });
 
-            // Burst 2: Smaller circles for filler
             confetti({
                 ...defaults,
                 particleCount: 30,
