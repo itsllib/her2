@@ -7,33 +7,41 @@
     <style>
         body {
             margin: 0;
-            height: 100vh;
+            min-height: 100vh;
+            background-color: #fff0f3; /* Soft pink background */
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', sans-serif;
+            overflow-x: hidden; /* Prevent side scrolling */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- SECTION 1: The Surprise Box --- */
+        .surprise-section {
+            height: 100vh; /* Takes up full screen initially */
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #fff0f3; /* Soft pink background */
-            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', sans-serif; /* Cute font */
-            overflow: hidden;
+            width: 100%;
+            position: relative;
         }
 
-        /* The Birthday Message Styling */
         #birthday-message {
             position: absolute;
-            top: 15%; /* Positioned near the top */
+            top: 15%;
             left: 0;
             width: 100%;
             text-align: center;
             font-size: 3.5rem;
-            color: #ff6b6b; /* Salmon/Coral color */
-            text-shadow: 2px 2px 0px #fff, 4px 4px 0px rgba(0,0,0,0.1);
-            opacity: 0; /* Hidden initially */
+            color: #ff6b6b;
+            text-shadow: 2px 2px 0px #fff;
+            opacity: 0;
             transform: scale(0.5);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
-            z-index: 50; /* On top of everything */
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 50;
             pointer-events: none;
         }
 
-        /* Class to show the message */
         #birthday-message.show-message {
             opacity: 1;
             transform: scale(1);
@@ -43,7 +51,7 @@
             position: relative;
             text-align: center;
             cursor: pointer;
-            z-index: 10; 
+            z-index: 10;
         }
 
         #box-image {
@@ -53,7 +61,6 @@
             filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
         }
 
-        /* Only wiggle the box if it hasn't been opened yet */
         .container:not(.opened):hover #box-image {
             transform: scale(1.05) rotate(3deg);
         }
@@ -83,22 +90,92 @@
             80% { transform: scale(1.1) translateY(-10px); opacity: 1; }
             100% { transform: scale(1) translateY(0); opacity: 1; }
         }
+
+        /* --- SECTION 2: The Memory Board --- */
+        #memory-board {
+            display: none; /* Hidden until box is clicked */
+            width: 100%;
+            max-width: 1000px;
+            height: 600px; /* Area for photos */
+            position: relative;
+            margin-top: -50px;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .photo-card {
+            background: white;
+            padding: 10px 10px 40px 10px; /* Extra padding at bottom for Polaroid look */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            position: absolute;
+            width: 200px;
+            transition: transform 0.2s, z-index 0.2s;
+            cursor: grab;
+            border-radius: 2px;
+        }
+
+        .photo-card:active {
+            cursor: grabbing;
+            transform: scale(1.1) !important;
+            z-index: 1000 !important; /* Bring to front when dragging */
+        }
+
+        .photo-card img {
+            width: 100%;
+            display: block;
+            pointer-events: none; /* Prevents image dragging ghost */
+        }
+
+        /* Decorative Tape */
+        .tape {
+            position: absolute;
+            top: -15px;
+            left: 35%;
+            width: 30%;
+            height: 35px;
+            background-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transform: rotate(-2deg);
+            z-index: 10;
+        }
+
     </style>
 </head>
 <body>
 
     <div id="birthday-message">Happy Birthday Shirley!</div>
 
-    <div class="container" id="main-container" onclick="openBox()">
-        <div id="box-wrapper">
-            <img src="box.png" alt="Closed Box" id="box-image">
-            <div class="instruction">Click the box!</div>
+    <div class="surprise-section">
+        <div class="container" id="main-container" onclick="openBox()">
+            <div id="box-wrapper">
+                <img src="box.png" alt="Closed Box" id="box-image">
+                <div class="instruction">Click the box!</div>
+            </div>
+            <img src="bear.png" alt="Cute Bear Surprise" id="bear-image">
         </div>
-
-        <img src="bear.png" alt="Cute Bear Surprise" id="bear-image">
     </div>
 
+    <div id="memory-board">
+        <div class="photo-card" style="top: 10%; left: 10%; transform: rotate(-5deg);">
+            <div class="tape"></div>
+            <img src="photo1.jpg" alt="Memory 1"> 
+        </div>
+
+        <div class="photo-card" style="top: 20%; left: 40%; transform: rotate(3deg);">
+            <div class="tape"></div>
+            <img src="photo2.jpg" alt="Memory 2">
+        </div>
+
+        <div class="photo-card" style="top: 15%; left: 70%; transform: rotate(-2deg);">
+            <div class="tape"></div>
+            <img src="photo3.jpg" alt="Memory 3">
+        </div>
+        
+        </div>
+
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/draggabilly/3.0.0/draggabilly.pkgd.min.js"></script>
 
     <script>
         let isOpened = false;
@@ -111,51 +188,41 @@
             const bearImage = document.getElementById('bear-image');
             const container = document.getElementById('main-container');
             const message = document.getElementById('birthday-message');
+            const board = document.getElementById('memory-board');
 
-            // 1. Play Sound
             const audio = new Audio('horn.mp3');
             audio.volume = 0.5;
             audio.play();
 
-            // 2. Hide Box / Show Bear
             boxWrapper.style.display = 'none';
             bearImage.classList.add('pop-out-anim');
-            
-            // 3. Show the Birthday Message
             message.classList.add('show-message');
-
-            // 4. Disable future clicks
             container.style.cursor = 'default';
             container.classList.add('opened');
 
-            // 5. Fire Confetti
+            // Show the Memory Board smoothly
+            board.style.display = 'block';
+            setTimeout(() => {
+                board.style.opacity = '1';
+                // Scroll down slightly so they see the photos appear
+                window.scrollBy({ top: 300, behavior: 'smooth' });
+            }, 500);
+
             fireCartoonConfetti();
         }
 
         function fireCartoonConfetti() {
-            const defaults = {
-                origin: { y: 0.6 },
-                zIndex: 100,
-                colors: ['#FF9AA2', '#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA']
-            };
-
-            confetti({
-                ...defaults,
-                particleCount: 50,
-                spread: 100,
-                scalar: 2,
-                shapes: ['circle']
-            });
-
-            confetti({
-                ...defaults,
-                particleCount: 30,
-                spread: 120,
-                scalar: 1,
-                shapes: ['circle'],
-                startVelocity: 45
-            });
+            const defaults = { origin: { y: 0.6 }, zIndex: 100, colors: ['#FF9AA2', '#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA'] };
+            confetti({ ...defaults, particleCount: 50, spread: 100, scalar: 2, shapes: ['circle'] });
+            confetti({ ...defaults, particleCount: 30, spread: 120, scalar: 1, shapes: ['circle'], startVelocity: 45 });
         }
+
+        // Initialize Draggabilly for all photo cards
+        const draggies = [];
+        const photos = document.querySelectorAll('.photo-card');
+        photos.forEach((photo) => {
+            draggies.push(new Draggabilly(photo));
+        });
     </script>
 
 </body>
