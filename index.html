@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surprise!</title>
+    <title>Surprise Explosion!</title>
     <style>
         body {
             margin: 0;
@@ -20,6 +20,8 @@
             position: relative;
             text-align: center;
             cursor: pointer;
+            /* Ensure container doesn't block confetti layer */
+            z-index: 10; 
         }
 
         /* Styling for the initial closed box image */
@@ -83,17 +85,39 @@
         <img src="bear.png" alt="Cute Bear Surprise" id="bear-image">
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <script>
         function openBox() {
             // Get references to the elements
             const boxWrapper = document.getElementById('box-wrapper');
             const bearImage = document.getElementById('bear-image');
 
+            // Check if already opened to prevent double clicks
+            if (bearImage.style.display === 'block') return;
+
             // 1. Hide the initial box and instruction
             boxWrapper.style.display = 'none';
 
             // 2. Show the bear image by adding the animation class
             bearImage.classList.add('pop-out-anim');
+
+            // 3. Trigger the confetti explosion
+            fireConfetti();
+        }
+
+        function fireConfetti() {
+            // This calls the library loaded above.
+            // We configure it for a central explosion "burst".
+            confetti({
+                particleCount: 150, // Number of papers
+                spread: 180,        // How wide the explosion is in degrees
+                origin: { y: 0.6 }, // Start slightly below center to align with the box top
+                startVelocity: 40,  // How fast they explode outwards
+                gravity: 1,         // How fast they fall down
+                colors: ['#FF6B6B', '#FFD93D', '#6BCB77', '#4D96FF', '#F7F7F7'], // Festive colors
+                zIndex: 100         // Ensure it appears on top of the bear
+            });
         }
     </script>
 
